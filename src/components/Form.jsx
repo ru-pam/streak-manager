@@ -20,6 +20,7 @@ const Form = () => {
       />
       {task.length > 0 && (
         <button
+          type = "button"
           onClick={() => setTask("")}
           className={
             "bg-[#EDDDD4] p-2 rounded-lg text-[#6E0E0A] text-lg cursor-pointer"
