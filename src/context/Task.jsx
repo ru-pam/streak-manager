@@ -10,7 +10,7 @@ const TaskProvider = ({ children }) => {
   const [streakItem, setStreakItem] = useState([]);
   const [task, setTask] = useState("");
   const addStreakItem = () => {
-    console.log("test")
+    console.log("test");
     const newStreakItem = [
       ...streakItem,
       { id: Date.now(), text: task, maxStreak: 0, currentStreak: 0 },
@@ -22,7 +22,12 @@ const TaskProvider = ({ children }) => {
     const newStreakItem = streakItem.filter((item) => item.id !== id);
     setStreakItem(newStreakItem);
   };
-  const updateStreakItem = () => {};
+  const updateStreakItem = (text, id) => {
+    const newStreakItem = streakItem.map((item) =>
+      item.id === id ? { ...item, text } : item,
+    );
+    setStreakItem(newStreakItem);
+  };
   return (
     <TaskContext.Provider
       value={{
