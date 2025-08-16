@@ -1,11 +1,10 @@
 import React, { useState } from "react";
 import { useTask } from "../context/Task.jsx";
-//bug - clicking edit on one task is making all tasks switch to input mode.
 const List = () => {
   const { streakItem, deleteStreakItem, updateStreakItem } = useTask();
   const currentDate = new Date();
   const date = currentDate.toDateString();
-  const [isEditing, setIsEditing] = useState(false);
+  const [editingId, setEditingId] = useState(null);
   const [text, setText] = useState("");
   return (
     <div>
@@ -22,17 +21,25 @@ const List = () => {
                 "flex flex-col gap-1 items-center justify-center h-full"
               }
             >
-              {isEditing ? (
-                <input
-                  type="text"
-                  className={
-                    "bg-[#EDDDD4] w-[50%] p-1  rounded-lg text-[#6E0E0A] outline-none text-lg"
-                  }
-                  placeholder={task.text}
-                  value={text}
-                  onChange={(e) => setText(e.target.value)}
-                  autoFocus={true}
-                />
+              {editingId === task.id ? (
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    updateStreakItem(text, task.id);
+                    setEditingId(null);
+                  }}
+                >
+                  <input
+                    type="text"
+                    className={
+                      "bg-[#EDDDD4] w-[50%] p-1  rounded-lg text-[#6E0E0A] outline-none text-lg"
+                    }
+                    placeholder={task.text}
+                    value={text}
+                    onChange={(e) => setText(e.target.value)}
+                    autoFocus={true}
+                  />
+                </form>
               ) : (
                 <div className={"font-bold text-xl"}>{task.text}</div>
               )}
@@ -43,13 +50,9 @@ const List = () => {
                 <label htmlFor="check">{date}</label>
               </div>
               <div className={"flex justify-center gap-5 w-full px-3"}>
-                {isEditing ? (
+                {editingId === task.id ? (
                   <button
                     className={"bg-[#772E25] p-[5px] rounded-lg cursor-pointer"}
-                    onClick={() => {
-                      setIsEditing((prevState) => !prevState);
-                      updateStreakItem(text, task.id);
-                    }}
                   >
                     Update
                   </button>
@@ -61,7 +64,7 @@ const List = () => {
                       }
                       onClick={() => {
                         setText(task.text);
-                        setIsEditing((prevState) => !prevState);
+                        setEditingId(task.id);
                       }}
                     >
                       Edit
